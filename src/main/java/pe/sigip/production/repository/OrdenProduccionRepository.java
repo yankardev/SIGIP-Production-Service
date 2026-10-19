@@ -1,0 +1,1 @@
+package pe.sigip.production.repository; import pe.sigip.production.model.OrdenProduccion; import org.springframework.data.jpa.repository.JpaRepository; public interface OrdenProduccionRepository extends JpaRepository<OrdenProduccion,Long>{}
