@@ -1,14 +1,24 @@
-# SIGIP-Production-Service
+# production-service
 
-Seguimiento de producción para SIGIP.
+Producción: órdenes de trabajo, cola por prioridad y control de calidad.
 
-- Java 25
-- Spring Boot 3.5.6
-- Spring Cloud 2025.0.0
-- Configuración: application.properties
-- Puerto local: 8097
-- Base de datos: sigip_production
+## Funcionalidad
 
-Configura `DB_USERNAME` y `DB_PASSWORD` en el entorno local si no utilizas las credenciales por defecto. Requiere MySQL y Eureka (puerto 8761).
+- `GET|POST|PUT|DELETE /api/v1/ordenes-produccion` (ADMIN). La cola se ordena ALTA → MEDIA → BAJA y por antigüedad.
+- Solo se crea para pedidos CONFIRMADO o EN_DISENO, una por pedido.
+- `POST /{id}/inicio` → EN_PROCESO y el pedido pasa a EN_PRODUCCION.
+- `POST /{id}/calidad` → aprobado: TERMINADA y pedido TERMINADO; observado: OBSERVADA y luego reproceso.
 
-Endpoint de salud: `GET /api/production/health` (consulta la ruta del controlador para el path exacto).
+## Pruebas
+
+- `OrdenProduccionRepositoryTest`, `OrdenProduccionFlujoIntegrationTest`
+
+## Ejecución
+
+Puerto `8097`. Base local `sigip_production` (MySQL); en la nube, esquema propio en PostgreSQL.
+
+Variables: `DB_USER`, `DB_PASSWORD`, `JWT_SECRET` (o `DB_URL` completa).
+
+```bash
+mvn -pl backend/production-service -am spring-boot:run
+```

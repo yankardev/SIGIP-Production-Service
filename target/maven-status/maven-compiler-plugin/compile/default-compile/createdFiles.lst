@@ -1,0 +1,16 @@
+pe\edu\cibertec\sigip\productionservice\controller\OrdenProduccionController.class
+pe\edu\cibertec\sigip\productionservice\client\SalesServiceClient$Fallback$1.class
+pe\edu\cibertec\sigip\productionservice\repository\OrdenProduccionRepository.class
+pe\edu\cibertec\sigip\productionservice\client\CambioEstadoPedido.class
+pe\edu\cibertec\sigip\productionservice\model\OrdenProduccion$OrdenProduccionBuilder.class
+pe\edu\cibertec\sigip\productionservice\ProductionServiceApplication.class
+pe\edu\cibertec\sigip\productionservice\client\PedidoResumen.class
+pe\edu\cibertec\sigip\productionservice\model\Prioridad.class
+pe\edu\cibertec\sigip\productionservice\dto\OrdenRequest.class
+pe\edu\cibertec\sigip\productionservice\service\OrdenProduccionService.class
+pe\edu\cibertec\sigip\productionservice\dto\ResultadoCalidadRequest.class
+pe\edu\cibertec\sigip\productionservice\dto\OrdenResponse.class
+pe\edu\cibertec\sigip\productionservice\model\EstadoOrden.class
+pe\edu\cibertec\sigip\productionservice\client\SalesServiceClient$Fallback.class
+pe\edu\cibertec\sigip\productionservice\model\OrdenProduccion.class
+pe\edu\cibertec\sigip\productionservice\client\SalesServiceClient.class
