@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pe.edu.cibertec.sigip.common.error.RecursoNoEncontradoException;
 import pe.edu.cibertec.sigip.common.error.ReglaNegocioException;
 import pe.edu.cibertec.sigip.productionservice.client.CambioEstadoPedido;
+import pe.edu.cibertec.sigip.productionservice.client.DesignServiceClient;
 import pe.edu.cibertec.sigip.productionservice.client.PedidoResumen;
 import pe.edu.cibertec.sigip.productionservice.client.SalesServiceClient;
 import pe.edu.cibertec.sigip.productionservice.dto.OrdenRequest;
@@ -21,9 +22,10 @@ import java.util.Set;
 
 /**
  * Reglas de producción:
- * - Solo se crea una orden para un pedido con pago verificado (CONFIRMADO o EN_DISENO) y una sola por pedido.
+ * - Solo se crea una orden para un pedido con pago verificado y diseño aprobado.
+ * - Existe una única orden de producción por pedido.
  * - Iniciar la orden pasa el pedido a EN_PRODUCCION; aprobar calidad lo pasa a TERMINADO.
- * - Si la calidad se observa, la orden vuelve a proceso (reproceso) sin cerrar el pedido.
+ * - Si la calidad se observa, la orden vuelve a proceso sin cerrar el pedido.
  */
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ public class OrdenProduccionService {
 
     private final OrdenProduccionRepository repository;
     private final SalesServiceClient salesClient;
+    private final DesignServiceClient designClient;
 
     @Transactional(readOnly = true)
     public List<OrdenResponse> listar(EstadoOrden estado) {
@@ -54,8 +57,14 @@ public class OrdenProduccionService {
         }
         PedidoResumen pedido = salesClient.obtenerPedido(request.idpedido());
         if (!PEDIDO_LISTO.contains(pedido.estado())) {
-            throw new ReglaNegocioException("El pedido debe tener el pago verificado para producirse (estado actual: "
+            throw new ReglaNegocioException("El pedido debe tener el pago verificado antes de producirse (estado actual: "
                     + pedido.estado() + ")");
+        }
+
+        boolean disenoAprobado = designClient.listar(request.idpedido()).stream()
+                .anyMatch(d -> "APROBADO".equals(d.estado()));
+        if (!disenoAprobado) {
+            throw new ReglaNegocioException("El pedido requiere un diseño aprobado por el cliente antes de crear la orden de producción");
         }
 
         OrdenProduccion orden = OrdenProduccion.builder()
