@@ -14,11 +14,11 @@ import pe.edu.cibertec.sigip.productionservice.service.OrdenProduccionService;
 
 import java.util.List;
 
-/** Gestión de órdenes de producción (personal interno: rol ADMIN). */
+/** Gestión de órdenes de producción para ADMIN y OPERACIONES. */
 @RestController
 @RequestMapping("/api/v1/ordenes-produccion")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','OPERACIONES')")
 public class OrdenProduccionController {
 
     private final OrdenProduccionService service;
